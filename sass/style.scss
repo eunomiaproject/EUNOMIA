@@ -1,3 +1,4 @@
+@import 'prefixMixies';
 body {
     font-family: 'Oswald', Arial, sans-serif;
 }
@@ -22,4 +23,39 @@ body {
 h1 {
     font-weight: 300;
     text-transform: capitalize;
+
+    display: none;
+}
+ul.tabs {
+ list-style: none;
+ margin: 0;
+ padding: 0;
+ text-align: left;
+ li {
+ 	@include inline;
+ 	margin-right: 2px;
+		a { 
+			background: #e1e1e1;
+			color: #999;
+			cursor: pointer;
+			@include inline;
+			padding: 9px 15px;
+			text-decoration: none; 
+		}
+	&.active { 
+		@include inline;  
+		a { background: red; }
+	}
+ }
+}
+.office {
+	width: 100%;
+	background: #e1e1e1;
+	height: 500px;
+	//div[id^='tab'] { display: none; }
+	div[id^='tab'] { margin: 0; }
+	p {
+		margin: 0;
+		padding: 0;
+	}
 }
