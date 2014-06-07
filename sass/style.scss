@@ -1,0 +1,25 @@
+body {
+    font-family: 'Oswald', Arial, sans-serif;
+}
+.candidateSearch {
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+}
+#zip { text-align: center; }
+#wrapper {
+	max-width: 960px;
+	margin: 0 auto;
+	width: 90%;
+}
+.candidate, .official {
+    border-top: 1px solid #ccc;
+    width: 100%;
+}
+.candidate:last-of-type, .official:last-of-type {
+    border-bottom: 1px solid #ccc;
+}
+h1 {
+    font-weight: 300;
+    text-transform: capitalize;
+}
