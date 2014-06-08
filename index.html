@@ -4,12 +4,9 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width">
 	<title>Angular Test</title>
-    <link rel="stylesheet" href="sass/style.scss.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<style>
-
-	</style>
 	<div ng-app="EUNOMIA" class="candidateSearch">
 	<!-- Declare app
 	    <h1>Original Controller</h1>
@@ -31,10 +28,10 @@
 		<h1>Find Your Elected Officials</h1>
 		<div ng-controller="OfficialsGoogleCtrl">
 		<!-- Declare controller to use -->
-			<label for="zip">
-			    <input type="text" name="zip" id="zip" ng-model="searchQuery" placeholder="Search by zip code">
-			    <!-- Setup to use for filtering later -->
-			    <input type="button" name="submit" ng-click="getOcdId()" value="Search">
+			<label for="search">
+			    <input type="text" name="search" id="search" ng-model="searchQuery" placeholder="Search">
+				<!-- Setup to use for filtering later -->
+			    <input class="btn" type="button" name="submit" ng-click="getOcdId()" value="Search">
             </label>
 			<div id="wrapper">
 				<!-- tabs -->
@@ -46,14 +43,14 @@
                     </ul>
 				     <div class="office" ng-repeat="office in offices" ng-if="office.level == activeLevel">
 					    <div class="official" ng-repeat="official in office.officialIds" >
-					    	<p>{{office.level}}</p>
+					    	<h2>{{office.name}}</h2>
 
 							<div class="photo">
         	                    <img ng-src="{{officials[official].photoUrl}}" />
         	                </div>
-        	                <h1>{{officials[official].name}}</h1>
-        	                <h2>Position: {{office.name}}</h2>
-        	                <h4>Level: {{office.level}}</h4>
+        	                <h3>{{officials[official].name}}</h3>
+        	               
+        	                <!--<h4>Level: {{office.level}}</h4>-->
 
 							</div><!-- official ends -->
 				    </div><!-- office ends -->
@@ -196,7 +193,7 @@
             }
         });
 
-		function OfficialsGoogleCtrl($scope, $location, $http, officialsGoogleFactory) {
+		function OfficialsGoogleCtrl($scope, $location, $http, officialsGoogleFactory, $q) {
 			$scope.officials = [];
 			$scope.levels = ['federal','state','local'];
             $scope.activeLevel = "";
@@ -204,21 +201,50 @@
                 $http({
                     url: 'http://zip.getziptastic.com/v2/US/'+$scope.searchQuery,
                     method: 'GET'
-                }).success(function(data) {
-                    $scope.ocdId = data.state_short.toLowerCase();
-                    officialsGoogleFactory.getOfficials({
-                        includeOffices: true,
-                        fields: "offices,officials",
-                        ocdId: "ocd-division/country:us/state:"+$scope.ocdId
-                    }).success(function(data) {
-                        $scope.offices = data.offices
-                        $scope.officials = data.officials;
-                        console.log($scope.offices);
-                        console.log($scope.officials);
-        			});
+                }).error(function(data) {
+					$scope.states = [
+						'al','ak','az','ar','ca','co','ct','de','fl','ga','hi','id','il','in','ia','ks','ky','la','me','md','ma','mi','mn','ms','mo','mt','ne','nv','nh','nj','nm','ny','nc','nd','oh','ok','or','pa','ri','sc','sd','tn','tx','ut','vt','va','wa','wv','wi','wy'
+					];
+					var officialId = 0,
+						officeIndex = 0,
+						officialIndex = 0,
+						all = {
+							offices: {},
+							officials: {}
+						};
+					angular.forEach($scope.states, function(value,key) {
+						officialsGoogleFactory.getOfficials({
+							includeOffices: true,
+							fields: "offices,officials",
+							ocdId: "ocd-division/country:us/state:"+value
+						}).success(function(data) {
+							angular.forEach(data.offices, function(value,key) {
+								var tmp = value;
+								angular.forEach(tmp.officialIds, function(value,key) {
+									tmp.officialIds[key] = officialId++;
+								});
+								all.offices[officeIndex++] = tmp;
+							});
+							angular.forEach(data.officials, function(value,key) {
+								all.officials[officialIndex++] = value;
+							});
+						});
+					});
+					$q.all(all).then(function() {
+						$scope.offices = all.offices;
+						$scope.officials = all.officials;
+					});
+				}).success(function(data) {
+					officialsGoogleFactory.getOfficials({
+						includeOffices: true,
+						fields: "offices,officials",
+						ocdId: "ocd-division/country:us/state:"+data.state_short.toLowerCase()
+					}).success(function(data) {
+						$scope.offices = data.offices;
+						$scope.officials = data.officials;
+					});
                 });
 			};
-			
 			
 			$scope.tab = $scope.levels[0]; //starts on first tab
             $scope.activeLevel = $scope.levels[0];
