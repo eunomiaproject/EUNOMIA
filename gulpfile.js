@@ -1,10 +1,10 @@
 var gulp = require('gulp');
-var sass = require('gulp-ruby-sass');
+var sass = require('gulp-sass');
 
 gulp.task('sass', function () {
     return gulp.src('sass/*.scss')
         .pipe(sass({
-            style: "compressed"
+			errLogToConsole: true
         }))
         .pipe(gulp.dest('css/'));
 });
