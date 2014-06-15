@@ -8,23 +8,6 @@
 </head>
 <body>
 	<div ng-app="EUNOMIA" class="candidateSearch">
-	<!-- Declare app
-	    <h1>Original Controller</h1>
-		<div ng-controller="CandidatesCtrl">
-		<!-- Declare controller to use
-			<label for="search">Search
-			    <input type="text" name="search" id="search" ng-model="searchQuery">
-			    <!-- Setup to use for filtering later
-            </label>
-			<div id="wrapper">
-				<div class="candidate" ng-repeat="candidate in candidates | orderBy: 'name_first' | limitTo: 5 | filter:search">
-				<!-- loops through all of the candidates from the $scope.candidates in the controller. orders by first name, and filters based on input text with Custom Filter function $scope.search
-					<h1>{{candidate.name_first|lowercase}} {{candidate.name_last|lowercase}}</h1>
-					<!-- first and last name set to lowercase
-				</div>
-			</div>
-		</div>
-		<br>-->
 		<!--<h1>Find Your Elected Officials</h1>-->
 		<div ng-controller="OfficialsGoogleCtrl">
 		<!-- Declare controller to use -->
@@ -42,7 +25,7 @@
                         </li>
                     </ul>
 				     <div class="office" ng-repeat="office in offices" ng-if="office.level == activeLevel">
-					    <div class="official" ng-repeat="official in office.officialIds" ng-class="{'republican' : officials[official].party == 'Republican', 'democratic' : officials[official].party == 'Democratic'}">
+					    <div class="official" ng-repeat="official in office.officialIds"  ng-class="changeClass(officials[official].party)" >
 					    	<h2>{{office.name}}</h2>
 
 							<div class="photo">
@@ -56,46 +39,7 @@
 				    </div><!-- office ends -->
 				</div><!-- division tab ends -->
 				<!-- tab ends -->
-			
-			
-				<!-- OLD VERSION 
-				<div class="official" ng-repeat="official in officials | filter: searchQuery">
-				<!-- loops through all of the candidates from the $scope.candidates in the controller. orders by first name, and filters based on input text with Custom Filter function $scope.search 
-				    <div class="photo">
-				        <img ng-src="{{official.photoUrl}}" />
-				    </div>
-					<h1>{{official.name}}</h1>
-					<!-- ng-show hides address if it is empty and why does it work with or without > 0
-					<section class="address" ng-show="official.address.length">
-					    <div class="street">{{official.address[0].line1}}</div>
-					    <span class="city">{{official.address[0].city}}</span>,
-					    <span class="state">{{official.address[0].state}}</span>
-					    <span class="zip">{{official.address[0].zip}}</span>
-					</section>
-					<!-- name set to lowercase 
-				</div>-->
-				
-                <!--				
-                <div class="office" ng-repeat="office in offices" >
-                <!-- ng-show="office.level == 'state'"  add this if you want to only show those from state-->
-				<!-- loops through all of the candidates from the $scope.candidates in the controller. orders by first name, and filters based on input text with Custom Filter function $scope.search 
-                    <div class="official" ng-repeat="official in office.officialIds">
-                        <div class="photo">
-                            <img ng-src="{{officials[official].photoUrl}}" />
-                        </div>
-                        <h1>{{officials[official].name}}</h1>
-                        <h2>Position: {{office.name}}</h2>
-                        <h4>Level: {{office.level}}</h2>
-                        <!-- ng-show hides address if it is empty and why does it work with or without > 0
-                        <section class="address" ng-show="officials[official].address.length">
-                            <div class="street">{{officials[official].address[0].line1}}</div>
-                            <span class="city">{{officials[official].address[0].city}}</span>,
-                            <span class="state">{{officials[official].address[0].state}}</span>
-                            <span class="zip">{{officials[official].address[0].zip}}</span>
-                        </section>
-                        <!-- name set to lowercase 
-					</div> 
-				</div>-->
+
 			</div>
 		</div>
 	</div>
@@ -104,63 +48,7 @@
 
 		var EUNOMIA = angular.module('EUNOMIA', []);
 		//create the app named EUNOMIA
-		
-		EUNOMIA.factory('candidateFactory', function($http) {
-        //factory for getting data and building the url
-            return{
-            //returns the response from the following function
-                getCandidates : function(filter) {
-                //function for getting candidates from server
-                    filter = filter ? filter : "";
-                    //sets filter to "" if nothing is passed
-                    var filterList = "";
-                    //declares a var to hold all of the filters passed
-                    angular.forEach(filter, function(value, key) {
-                    //Angulars version of a for each loop, loops through all the filters passed 
-                        filterList += key + "=" + value + "&";
-                        //takes each filter and appends it to the list separating them with an & 
-                    });
-                    filterList = filterList.replace(/\&$/, '');
-                    //removes the last & so there isn't a random one floating by itself
-                    return $http({
-                    //returns the response from $http
-                        url: 'http://explore.data.gov/resource/wuxv-c8xz.json?'+filterList,
-                        //url for the api with the filter list appended to the end for server side filtering 
-                        method: 'GET'
-                        //get method... obviously lol
-                    });
-                }
-            }
-        });
 
-		function CandidatesCtrl($scope, $location, $http, candidateFactory) {
-		//controller for the Candiates
-			$scope.candidates = [];
-			//declare the candidates object to use later
-			candidateFactory.getCandidates({
-			//call the getCandidates() function from the candidateFactory
-                year: 2014
-                //pass a parameter to be added to the end of the url, in this case it is the year 2014 (only show things that match parameter)
-            }).success(function(data) {
-            //on success return the data
-                $scope.candidates = data; 
-                // assign the data to the candidate object
-			});
-			$scope.search = function (row) {
-            //Custom Search filter. Passes the row of data automatically.
-			    var caseInsensitive = $scope.searchQuery ? $scope.searchQuery.toUpperCase() : $scope.searchQuery;
-			    //Set the search criteria (from the input with ng-model="searchQuery") to all caps (data.gov returned all content in CAPS)
-                return !!((
-                //testing if it should show or not
-                //returns true or false based on the following:
-                    row.name_first.indexOf(caseInsensitive || '') !== -1 || 
-                    //does the search criteria match first name in the row
-                    row.name_last.indexOf(caseInsensitive || '') !== -1
-                    //does the search criteria match last name in the row
-                ));
-            };
-		}
-		
 		
 		
 		/*==============================================================*/
@@ -248,30 +136,29 @@
 			
 			$scope.tab = $scope.levels[0]; //starts on first tab
             $scope.activeLevel = $scope.levels[0];
-              $scope.clickTab = function(setTab){
+            $scope.clickTab = function(setTab){
                 $scope.tab = setTab;
                 $scope.activeLevel = setTab;
                 console.log("Tab being clicked is " + setTab + ' and active level is ' + $scope.activeLevel);
-                
-              };
-            
-              $scope.isSelected = function(checkTab){
-                return $scope.tab === checkTab; //T or F
-              };
-		}
-		
-		/* possible solution
-		
-		angular.forEach(temp1, function(value, key) {
-         var level = value.level;
-         var office = value.name;
-         var officialIds = value.officialIds;
-         angular.forEach(officialIds, function(value, key) {
-          console.log(temp2[value])
-         });
-        });
 
-*/
+            };
+
+            $scope.isSelected = function(checkTab){
+                return $scope.tab === checkTab; //T or F
+            };
+            
+            $scope.changeClass = function(party){
+                if(party === 'Republican'){
+                    return "republican";
+                }
+                else if (party === 'Democratic'){
+                    return "democratic";
+                }
+                else {
+                    return "";
+                }
+            };
+		}
 		
 	</script>
 </body>
