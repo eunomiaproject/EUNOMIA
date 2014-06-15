@@ -1,7 +1,15 @@
 @import 'prefixMixies';
+
+$bluebg : #71969F;
+$redbg : #B51E1E;
+$blue : #00314C;
+
+
 body {
     font-family: 'Oswald', Arial, sans-serif;
+    font-size: 14px;
 }
+
 .candidateSearch {
     margin: 0 auto;
     text-align: center;
@@ -10,7 +18,7 @@ body {
 #zip { text-align: center; }
 #wrapper {
 	max-width: 960px;
-	margin: 0 auto;
+	margin: 30px auto 0;
 	width: 90%;
 }
 .candidate, .official {
@@ -18,22 +26,34 @@ body {
     width: 100%;
 }
 .candidate:last-of-type, .official:last-of-type {
-    border-bottom: 1px solid #ccc;
+    //border-bottom: 1px solid #ccc;
+}
+.btn {
+    background-color: $blue;
+	border: none;
+	border-radius: 3px;
+    color: #fff;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: bold;
+	margin-left: 5px;
+	padding: 9px;
+	text-align: center;
+	text-transform: uppercase;
+	width: 95px;
 }
 h1 {
     font-weight: 300;
     text-transform: capitalize;
-
-    display: none;
 }
 ul.tabs {
- list-style: none;
- margin: 0;
- padding: 0;
- text-align: left;
- li {
- 	@include inline;
- 	margin-right: 2px;
+	list-style: none;
+	margin: 0 auto;
+	padding: 0;
+	text-align: center;
+	li {
+		@include inline;
+		margin-right: 2px;
 		a { 
 			background: #e1e1e1;
 			color: #999;
@@ -42,20 +62,65 @@ ul.tabs {
 			padding: 9px 15px;
 			text-decoration: none; 
 		}
-	&.active { 
-		@include inline;  
-		a { background: red; }
+		&.active { 
+			@include inline;  
+			a { background: $blue; }
+		}
 	}
- }
 }
 .office {
-	width: 100%;
-	background: #e1e1e1;
-	height: 500px;
-	//div[id^='tab'] { display: none; }
+	/*width: 100%;*/
+	/*background: #e1e1e1;
+	//div[id^='tab'] { display: none; }*/
+	display: inline-block;
+	margin: 1% 2%;
 	div[id^='tab'] { margin: 0; }
 	p {
 		margin: 0;
 		padding: 0;
 	}
+	.official {
+		background-color: #e7e9e8;
+		border-radius: 2px;
+		box-shadow: 0 1px 1px #ccc;
+		//margin: 45px auto 20px;
+		margin: 2%;
+		//padding: 14px;
+		padding: 6px 14px 14px;
+		position: relative;
+		text-align: center;
+		width: 400px;
+		display: inline-block;
+		vertical-align: top;
+		border-top: 8px solid #E7E9E8;
+		box-sizing: border-box;
+		&.republican {
+			border-color: #BF4C49;
+		}
+		&.democratic {
+			border-color: #2A5194;
+		}
+		.photo {
+			width: 180px;
+			height: 225px;
+			margin: 0 auto;
+			position: relative;
+			overflow: hidden;
+			img {
+				//max-width: 320px;
+				position: absolute;
+				left: -100%;
+				right: -100%;
+				top: -100%;
+				bottom: -100%;
+				margin: auto;
+				min-height: 100%;
+				min-width: 100%;
+				width: 100%;
+			}
+		}
+	}
+}
+input {
+    font-size: 100%;
 }

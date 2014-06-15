@@ -25,11 +25,11 @@
 			</div>
 		</div>
 		<br>-->
-		<h1>Find Your Elected Officials</h1>
+		<!--<h1>Find Your Elected Officials</h1>-->
 		<div ng-controller="OfficialsGoogleCtrl">
 		<!-- Declare controller to use -->
 			<label for="search">
-			    <input type="text" name="search" id="search" ng-model="searchQuery" placeholder="Search">
+			    <input type="text" name="search" id="search" ng-model="searchQuery" placeholder="Enter Your Zip Code">
 				<!-- Setup to use for filtering later -->
 			    <input class="btn" type="button" name="submit" ng-click="getOcdId()" value="Search">
             </label>
@@ -42,7 +42,7 @@
                         </li>
                     </ul>
 				     <div class="office" ng-repeat="office in offices" ng-if="office.level == activeLevel">
-					    <div class="official" ng-repeat="official in office.officialIds" >
+					    <div class="official" ng-repeat="official in office.officialIds" ng-class="{'republican' : officials[official].party == 'Republican', 'democratic' : officials[official].party == 'Democratic'}">
 					    	<h2>{{office.name}}</h2>
 
 							<div class="photo">
