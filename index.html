@@ -32,14 +32,11 @@
         	                    <img ng-src="{{officials[official].photoUrl}}" />
         	                </div>
         	                <h3>{{officials[official].name}}</h3>
-        	               
         	                <!--<h4>Level: {{office.level}}</h4>-->
-
 							</div><!-- official ends -->
 				    </div><!-- office ends -->
 				</div><!-- division tab ends -->
 				<!-- tab ends -->
-
 			</div>
 		</div>
 	</div>
@@ -49,21 +46,18 @@
 		var EUNOMIA = angular.module('EUNOMIA', []);
 		//create the app named EUNOMIA
 
-		
-		
 		/*==============================================================*/
 		/*==============================================================*/
 		/*================ GOOGLE CIVIC INFORMATION API ================*/
 		/*==============================================================*/
 		/*==============================================================*/
-		
+
 		// URL for Representative Lookup:
 		// https://www.googleapis.com/civicinfo/us_v1/representatives/lookup?key={YOUR_API_KEY}
-		
+
 		// API KEY :
 		// AIzaSyDdPvQ-R7FGD7RA9rMJO8NS2eKi910Gp6g
-		
-		
+
 		EUNOMIA.factory('officialsGoogleFactory', function($http) {
             return{
                 getOfficials : function(options) {
@@ -133,7 +127,7 @@
 					});
                 });
 			};
-			
+
 			$scope.tab = $scope.levels[0]; //starts on first tab
             $scope.activeLevel = $scope.levels[0];
             $scope.clickTab = function(setTab){
@@ -144,20 +138,18 @@
             $scope.isSelected = function(checkTab){
                 return $scope.tab === checkTab; //T or F
             };
-            
+
             $scope.changeClass = function(party){
-                if(party === 'Republican'){
-                    return "republican";
-                }
-                else if (party === 'Democratic'){
-                    return "democratic";
-                }
-                else {
-                    return "";
+                switch(party){
+                    case 'Republican' :
+                        return 'republican';
+                    case 'Democratic':
+                        return 'democratic';
+                    default:
+                        return;
                 }
             };
 		}
-		
 	</script>
 </body>
 </html>
