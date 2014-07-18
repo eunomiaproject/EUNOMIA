@@ -73,7 +73,8 @@ ul.tabs {
 	/*background: #e1e1e1;
 	//div[id^='tab'] { display: none; }*/
 	display: inline-block;
-	margin: 1% 2%;
+	//margin: 1% 2%;
+	margin: 9.5px 10pt;
 	div[id^='tab'] { margin: 0; }
 	p {
 		margin: 0;
@@ -84,7 +85,8 @@ ul.tabs {
 		border-radius: 2px;
 		box-shadow: 0 1px 1px #ccc;
 		//margin: 45px auto 20px;
-		margin: 2%;
+		//margin: 2%;
+		margin: 10pt;
 		//padding: 14px;
 		padding: 6px 14px 14px;
 		position: relative;

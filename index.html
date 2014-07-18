@@ -11,6 +11,7 @@
 		<!--<h1>Find Your Elected Officials</h1>-->
 		<div ng-controller="OfficialsGoogleCtrl">
 		<!-- Declare controller to use -->
+			
 			<label for="search">
 			    <input type="text" name="search" id="search" ng-model="searchQuery" placeholder="Enter Your Zip Code">
 				<!-- Setup to use for filtering later -->
@@ -38,11 +39,11 @@
 				</div><!-- division tab ends -->
 				<!-- tab ends -->
 			</div>
+			
 		</div>
 	</div>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.7/angular.min.js"></script>
 	<script>
-
 		var EUNOMIA = angular.module('EUNOMIA', []);
 		//create the app named EUNOMIA
 

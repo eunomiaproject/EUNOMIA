@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Angular Test</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div ng-app="EUNOMIA" class="candidateSearch">
+		<!--<h1>Find Your Elected Officials</h1>-->
+		<div ng-controller="OfficialsGoogleCtrl">
+		<!-- Declare controller to use -->
+			<div class="animate-switch-container" ng-switch on="page">
+				<div class="animate-switch" ng-switch-default>
+					<label for="search">
+						<input type="text" ng-model="location.query" placeholder="Enter Your Location">
+						<!-- Setup to use for filtering later -->
+						<input class="btn" type="button" name="submit" ng-click="getOcdId()" value="Start">
+					</label>
+				</div>
+				<div class="animate-switch" ng-switch-when="search">
+					<label for="search">
+						<input type="text" name="search" id="search" ng-model="search.query" placeholder="">
+						<!-- Setup to use for filtering later -->
+						<input class="btn" type="button" name="submit" ng-click="" value="Search">
+					</label>
+					<div id="wrapper">
+						<!-- tabs -->
+						<div class="divisionTab" >
+							<ul class="tabs">
+								<li ng-repeat="level in levels" ng-class="{active: isSelected(level)}">
+									<a ng-click="clickTab(level)">{{level}}</a>
+								</li>
+							</ul><!--   -->
+							 <div class="office" ng-repeat="office in offices" ng-if="office.level == activeLevel">
+								<div class="official" ng-repeat="official in office.officialIds | filter: {name: search.query}" ng-class="changeClass(official.party)">
+									<h2>{{office.name}}</h2>
+
+									<div class="photo">
+										<img ng-src="{{official.photoUrl}}" />
+									</div>
+									<h3>{{official.name}}</h3>
+									<!--<h4>Level: {{office.level}}</h4>-->
+								</div><!-- official ends -->
+							</div><!-- office ends -->
+						</div><!-- division tab ends -->
+						<!-- tab ends -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.7/angular.min.js"></script>
+	<script>
+		var EUNOMIA = angular.module('EUNOMIA', []);
+		//create the app named EUNOMIA
+
+		/*==============================================================*/
+		/*==============================================================*/
+		/*================ GOOGLE CIVIC INFORMATION API ================*/
+		/*==============================================================*/
+		/*==============================================================*/
+
+		// URL for Representative Lookup:
+		// https://www.googleapis.com/civicinfo/us_v1/representatives/lookup?key={YOUR_API_KEY}
+
+		// API KEY :
+		// AIzaSyDdPvQ-R7FGD7RA9rMJO8NS2eKi910Gp6g
+
+		EUNOMIA.factory('officialsGoogleFactory', function($http) {
+            return{
+                getOfficials : function(options, data) {
+                    options = options ? options : "";
+					data = data ? data : "";
+                    var optionList = "";
+                    angular.forEach(options, function(value, key) {
+                        optionList += key + "=" + value + "&";
+                    });
+                    optionList = optionList ? optionList : "";
+                    return $http({
+                        url: 'https://www.googleapis.com/civicinfo/us_v1/representatives/lookup?'+optionList+'key=AIzaSyDdPvQ-R7FGD7RA9rMJO8NS2eKi910Gp6g',
+                        method: 'POST',
+						data: data
+                    });
+                }
+            }
+        });
+
+		EUNOMIA.controller('OfficialsGoogleCtrl', function($scope, $location, $http, officialsGoogleFactory, $q) {
+			$scope.offices = [];
+			$scope.levels = ['federal','state','local'];
+			$scope.page = 'home';
+			$scope.location = {query: ''};
+			$scope.search = {query: ''};
+            $scope.activeLevel = "";
+			$scope.getOcdId = function() {
+				$scope.page = 'search';
+				if($scope.location['query']===""){
+					$scope.showEverything();
+				}else{
+					$http({
+						url: 'http://zip.getziptastic.com/v2/US/'+$scope.location['query'],
+						method: 'GET'
+					}).error(function(res) {
+						officialsGoogleFactory.getOfficials({
+							includeOffices: true,
+							fields: "offices,officials"
+						}, {"address":$scope.location['query']}).error(function(res) {
+							$scope.showEverything();
+						}).success(function(data) {
+							$scope.tmpOfficials = [];
+							angular.forEach(data.officials, function(value,key) {
+								$scope.tmpOfficials.push(value);
+							});
+							var officialId = 0;
+							$scope.tmpOffices = [];
+							angular.forEach(data.offices, function(value,key) {
+								var tmp = value;
+								angular.forEach(tmp.officialIds, function(value,key) {
+									tmp.officialIds[key] = $scope.tmpOfficials[officialId++];
+								});
+								$scope.tmpOffices.push(tmp);
+							});
+							$scope.offices = $scope.tmpOffices;
+						});
+					}).success(function(data) {
+						officialsGoogleFactory.getOfficials({
+							includeOffices: true,
+							fields: "offices,officials",
+							ocdId: "ocd-division/country:us/state:"+data.state_short.toLowerCase()
+						}).error(function(res) {
+							$scope.showEverything();
+						}).success(function(data) {
+							$scope.tmpOfficials = [];
+							angular.forEach(data.officials, function(value,key) {
+								$scope.tmpOfficials.push(value);
+							});
+							var officialId = 0;
+							$scope.tmpOffices = [];
+							angular.forEach(data.offices, function(value,key) {
+								var tmp = value;
+								angular.forEach(tmp.officialIds, function(value,key) {
+									tmp.officialIds[key] = $scope.tmpOfficials[officialId++];
+								});
+								$scope.tmpOffices.push(tmp);
+							});
+							$scope.offices = $scope.tmpOffices;
+						});
+					});
+				}
+			};
+			$scope.showEverything = function() {
+				$scope.states = [
+					'al','ak','az','ar','ca','co','ct','de','fl','ga','hi','id','il','in','ia','ks','ky','la','me','md','ma','mi','mn','ms','mo','mt','ne','nv','nh','nj','nm','ny','nc','nd','oh','ok','or','pa','ri','sc','sd','tn','tx','ut','vt','va','wa','wv','wi','wy'
+				];
+				var officialId = 0,
+					officeIndex = 0,
+					officialIndex = 0;
+				$scope.all = {
+						offices: {},
+						officials: {}
+					};
+				angular.forEach($scope.states, function(value,key) {
+					officialsGoogleFactory.getOfficials({
+						includeOffices: true,
+						fields: "offices,officials",
+						ocdId: "ocd-division/country:us/state:"+value
+					}).success(function(data) {
+						angular.forEach(data.offices, function(value,key) {
+							var tmp = value;
+							angular.forEach(tmp.officialIds, function(value,key) {
+								tmp.officialIds[key] = officialId++;
+							});
+							$scope.all.offices[officeIndex++] = tmp;
+						});
+						angular.forEach(data.officials, function(value,key) {
+							$scope.all.officials[officialIndex++] = value;
+						});
+
+						$scope.tmpOfficials = [];
+						angular.forEach($scope.all.officials, function(value,key) {
+							$scope.tmpOfficials.push(value);
+							console.log($scope.tmpOfficials);
+						});
+
+						var officialId2 = 0;
+						$scope.tmpOffices = [];
+
+						angular.forEach($scope.all.offices, function(value,key) {
+							var tmp = value;
+							angular.forEach(tmp.officialIds, function(value,key) {
+								tmp.officialIds[key] = $scope.tmpOfficials[officialId2++];
+							});
+							$scope.tmpOffices.push(tmp);
+							console.log($scope.tmpOffices);
+						});
+
+						$scope.offices = $scope.tmpOffices;
+					});
+				});
+			};
+
+			$scope.tab = $scope.levels[0]; //starts on first tab
+            $scope.activeLevel = $scope.levels[0];
+            $scope.clickTab = function(setTab){
+                $scope.tab = setTab;
+                $scope.activeLevel = setTab;
+            };
+
+            $scope.isSelected = function(checkTab){
+                return $scope.tab === checkTab; //T or F
+            };
+
+            $scope.changeClass = function(party){
+                switch(party){
+                    case 'Republican' :
+                        return 'republican';
+                    case 'Democratic':
+                        return 'democratic';
+                    default:
+                        return;
+                }
+            };
+		});
+	</script>
+</body>
+</html>
