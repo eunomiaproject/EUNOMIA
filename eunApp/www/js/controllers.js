@@ -1,6 +1,24 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.factory('officialsGoogleFactory', function($http) {
+  return{
+    getOfficials : function(options) {
+      console.log('i did something 1');
+      options = options ? options : "";
+      var optionList = "";
+      angular.forEach(options, function(value, key) {
+          optionList += key + "=" + value + "&";
+      });
+      optionList = optionList ? optionList : "";
+      return $http({
+        url: 'https://www.googleapis.com/civicinfo/v2/representatives?key=AIzaSyDdPvQ-R7FGD7RA9rMJO8NS2eKi910Gp6g&address=1263%20Pacific%20Ave.%20Kansas%20City%20KS',
+        method: 'GET'
+      });
+    }
+  };
+})
+
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, officialsGoogleFactory) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -39,6 +57,16 @@ angular.module('starter.controllers', [])
       $scope.closeLogin();
     }, 1000);
   };
+
+  $scope.list = {};
+
+  officialsGoogleFactory.getOfficials().success(function(data) {
+    console.log('i did something');
+    $scope.list = data;
+
+	});
+
+
 })
 
 .controller('PlaylistsCtrl', function($scope) {
