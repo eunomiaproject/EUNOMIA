@@ -1,6 +1,31 @@
 <ion-view view-title="Address">
   <ion-content>
     <h1>Address</h1>
-    {{list}}
+     <form name="addressForm" novalidate="" ng-submit="getAddress(addressForm)">
+        <div class="list list-inset">
+            <label class="item item-input validated">
+<!--        <i class="icon ion-ios-location placeholder-icon"></i> -->
+                <input type="text" placeholder="Street" name="street" ng-model="address.street" ng-minlength="5" ng-maxlength="95" required>
+                <i class="icon ion-alert-circled error col col-10"></i>
+
+
+
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="City">
+            </label>
+            <label class="item item-input">
+
+                <input type="text" placeholder="State">
+            </label>
+            <label class="item item-input">
+
+                <input type="text" placeholder="Zip Code">
+            </label>
+        </div>
+        <button type="submit" class="button icon-right ion-chevron-right button-block button-energized">
+        login
+      </button>
+     </form>
   </ion-content>
 </ion-view>

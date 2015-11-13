@@ -3,7 +3,6 @@ angular.module('starter.controllers', [])
 .factory('officialsGoogleFactory', function($http) {
   return{
     getOfficials : function(options) {
-      console.log('i did something 1');
       options = options ? options : "";
       var optionList = "";
       angular.forEach(options, function(value, key) {
@@ -61,12 +60,8 @@ angular.module('starter.controllers', [])
   $scope.list = {};
 
   officialsGoogleFactory.getOfficials().success(function(data) {
-    console.log('i did something');
     $scope.list = data;
-
 	});
-
-
 })
 
 .controller('PlaylistsCtrl', function($scope) {
@@ -78,6 +73,19 @@ angular.module('starter.controllers', [])
     { title: 'Rap', id: 5 },
     { title: 'Cowbell', id: 6 }
   ];
+})
+
+.controller('AddressCtrl', function($scope) {
+ $scope.getAddress = function() {
+    console.log('Address Gotten');
+  };
+
+  $scope.address = {
+    street: '',
+    city: '',
+    state: '',
+    zip: ''
+  };
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
