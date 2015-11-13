@@ -46,7 +46,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       'menuContent': {
         templateUrl: 'templates/address.html'
       }
-    }
+    },
+    controller: 'AppCtrl'
   })
   .state('app.browse', {
       url: '/browse',
