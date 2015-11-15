@@ -2,15 +2,9 @@ angular.module('starter.controllers', [])
 
 .factory('officialsGoogleFactory', function($http) {
   return{
-    getOfficials : function(options) {
-      options = options ? options : "";
-      var optionList = "";
-      angular.forEach(options, function(value, key) {
-          optionList += key + "=" + value + "&";
-      });
-      optionList = optionList ? optionList : "";
+    getOfficials : function(address) {
       return $http({
-        url: 'https://www.googleapis.com/civicinfo/v2/representatives?key=AIzaSyDdPvQ-R7FGD7RA9rMJO8NS2eKi910Gp6g&address=1263%20Pacific%20Ave.%20Kansas%20City%20KS',
+        url: 'https://www.googleapis.com/civicinfo/v2/representatives?key=AIzaSyDdPvQ-R7FGD7RA9rMJO8NS2eKi910Gp6g&address=' + address,
         method: 'GET'
       });
     }
@@ -91,4 +85,14 @@ angular.module('starter.controllers', [])
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
+})
+
+.controller('CandidatesCtrl', function($scope, officialsGoogleFactory) {
+  officialsGoogleFactory.getOfficials('1263 Pacific Ave. Kansas City KS').success(function(data) {
+    $scope.candidates = data.officials;
+	});
+})
+
+.controller('CandidateCtrl', function($scope) {
+  
 });

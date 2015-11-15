@@ -1,0 +1,9 @@
+<ion-view view-title="Candidates">
+  <ion-content class="padding">
+    <ion-list>
+      <ion-item ng-repeat="candidate in candidates" href="#/app/candidates/{{candidate.name.split(' ')[1]}}">
+        {{candidate.name}}
+      </ion-item>
+    </ion-list>
+ </ion-content>
+</ion-view>
