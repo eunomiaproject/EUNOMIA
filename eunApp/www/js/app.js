@@ -50,6 +50,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngMessages'])
     },
     controller: 'AppCtrl'
   })
+  .state('app.candidates', {
+    url: '/candidates',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/candidates.html',
+        controller: 'CandidatesCtrl'
+      }
+    }
+  })
+  .state('app.candidate', {
+    url: '/candidate',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/candidate.html',
+        controller: 'CandidatesCtrl'
+      }
+    }
+  })
   .state('app.browse', {
       url: '/browse',
       views: {
