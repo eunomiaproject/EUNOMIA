@@ -60,11 +60,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngMessages'])
     }
   })
   .state('app.candidate', {
-    url: '/candidate',
+    url: '/candidates/:candidateName',
     views: {
       'menuContent': {
         templateUrl: 'templates/candidate.html',
-        controller: 'CandidatesCtrl'
+        controller: 'CandidateCtrl'
       }
     }
   })
