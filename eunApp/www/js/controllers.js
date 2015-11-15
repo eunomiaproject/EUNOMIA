@@ -76,8 +76,10 @@ angular.module('starter.controllers', [])
 })
 
 .controller('AddressCtrl', function($scope) {
- $scope.getAddress = function() {
-    console.log('Address Gotten');
+ $scope.getAddress = function(isValid) {
+    if (isValid) {
+      alert('form submits');
+    }
   };
 
   $scope.address = {
