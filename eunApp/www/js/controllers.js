@@ -87,12 +87,29 @@ angular.module('starter.controllers', [])
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 })
 
-.controller('CandidatesCtrl', function($scope, officialsGoogleFactory) {
+.service('candidateService', function() {
+  var candidate = {};
+  var setCandidate = function(data) {
+    candidate = data;
+  };
+  var getCandidate = function() {
+    return candidate;
+  };
+  return {
+    setCandidate: setCandidate,
+    getCandidate: getCandidate
+  };
+})
+
+.controller('CandidatesCtrl', function($scope, officialsGoogleFactory, candidateService) {
   officialsGoogleFactory.getOfficials('1263 Pacific Ave. Kansas City KS').success(function(data) {
     $scope.candidates = data.officials;
+    $scope.setCandidate = function(data) {
+      candidateService.setCandidate(data);
+    };
 	});
 })
 
-.controller('CandidateCtrl', function($scope) {
-  
+.controller('CandidateCtrl', function($scope, candidateService) {
+  $scope.candidate = candidateService.getCandidate();
 });
