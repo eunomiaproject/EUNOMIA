@@ -19,11 +19,9 @@
                     <p ng-message="required">Your city is required.</p>
                 </div>
             </label>
-            <label class="item item-input" ng-class="{ 'has-error' : addressForm.state.$invalid
-            && addressForm.state.$touched}">
-                <input type="text" placeholder="State" name="state" ng-model="address.state" minlength="2" maxlength="2" required>
-                <div class="help-block" ng-messages="addressForm.state.$error" ng-show="addressForm.state.$touched">
-                    <div ng-messages-include="templates/errors.html"></div>
+            <label class="item item-input" ng-class="{ 'has-error' : addressForm.state.$invalid && addressForm.state.$touched}">
+                <input type="text" placeholder="State" name="state" ng-model="address.state" ng-minlength="2" ng-maxlength="2" required>
+                <div class="help-block" ng-messages="addressForm.state.$error" ng-show="addressForm.state.$touched" ng-messages-include="templates/errors.html">
                 </div>
             </label>
             <label class="item item-input" ng-class="{ 'has-error' : addressForm.zip.$invalid && addressForm.zip.$touched}">
@@ -45,4 +43,3 @@
 
  </ion-content>
 </ion-view>
-
