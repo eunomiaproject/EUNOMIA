@@ -69,10 +69,26 @@ angular.module('starter.controllers', [])
   ];
 })
 
-.controller('AddressCtrl', function($scope) {
+.service('addressService', function() {
+  var address = '';
+  var setAddress = function(addressObj) {
+    address = addressObj.street + ' ' + addressObj.city + ' ' + addressObj.state + ' ' + addressObj.zip;
+    alert(address);
+  };
+  var returnAddress = function() {
+    return address;
+  };
+  return {
+    setAddress: setAddress,
+    returnAddress: returnAddress
+  };
+})
+
+.controller('AddressCtrl', function($scope, $state, addressService) {
  $scope.getAddress = function(isValid) {
     if (isValid) {
-      alert('form submits');
+      addressService.setAddress($scope.address);
+      $state.go('app.candidates');
     }
   };
 
@@ -101,8 +117,8 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('CandidatesCtrl', function($scope, officialsGoogleFactory, candidateService) {
-  officialsGoogleFactory.getOfficials('1263 Pacific Ave. Kansas City KS').success(function(data) {
+.controller('CandidatesCtrl', function($scope, officialsGoogleFactory, candidateService, addressService) {
+  officialsGoogleFactory.getOfficials(addressService.returnAddress()).success(function(data) {
     $scope.candidates = data.officials;
     $scope.setCandidate = function(data) {
       candidateService.setCandidate(data);
