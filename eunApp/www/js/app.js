@@ -68,6 +68,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngMessages'])
       }
     }
   })
+  .state('app.pollingLocations', {
+    url: '/pollingLocations',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/pollingLocations.html',
+        controller: 'VoterInfoCtrl'
+      }
+    }
+  })
   .state('app.browse', {
       url: '/browse',
       views: {
