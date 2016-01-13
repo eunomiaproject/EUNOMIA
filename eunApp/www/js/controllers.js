@@ -7,6 +7,12 @@ angular.module('starter.controllers', [])
         url: 'https://www.googleapis.com/civicinfo/v2/representatives?key=AIzaSyDdPvQ-R7FGD7RA9rMJO8NS2eKi910Gp6g&address=' + address,
         method: 'GET'
       });
+    },
+    getVoterInfo : function(address) {
+      return $http({
+        url: 'https://www.googleapis.com/civicinfo/v2/voterinfo?key=AIzaSyDdPvQ-R7FGD7RA9rMJO8NS2eKi910Gp6g&address=' + address,
+        method: 'GET'
+      });
     }
   };
 })
@@ -128,4 +134,10 @@ angular.module('starter.controllers', [])
 
 .controller('CandidateCtrl', function($scope, candidateService) {
   $scope.candidate = candidateService.getCandidate();
+})
+
+.controller('VoterInfoCtrl', function($scope, officialsGoogleFactory, addressService) {
+  officialsGoogleFactory.getVoterInfo(addressService.returnAddress()).success(function(data) {
+    $scope.pollingLocations = data.pollingLocations;
+  });
 });
