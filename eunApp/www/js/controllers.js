@@ -10,7 +10,7 @@ angular.module('starter.controllers', [])
     },
     getVoterInfo : function(address) {
       return $http({
-        url: 'https://www.googleapis.com/civicinfo/v2/voterinfo?key=AIzaSyDdPvQ-R7FGD7RA9rMJO8NS2eKi910Gp6g&address=' + address,
+        url: 'https://www.googleapis.com/civicinfo/v2/voterinfo?key=AIzaSyDdPvQ-R7FGD7RA9rMJO8NS2eKi910Gp6g&electionId=2000&address=' + address,
         method: 'GET'
       });
     }
@@ -138,6 +138,8 @@ angular.module('starter.controllers', [])
 
 .controller('VoterInfoCtrl', function($scope, officialsGoogleFactory, addressService) {
   officialsGoogleFactory.getVoterInfo(addressService.returnAddress()).success(function(data) {
-    $scope.pollingLocations = data.pollingLocations;
+    $scope.pollingLocations = data;
+  }).error(function(error) {
+    $scope.pollingLocations = error;
   });
 });
